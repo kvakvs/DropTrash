@@ -1,0 +1,10 @@
+## Interface: 11303
+## Title: DropTrash Bag Cleaner
+## Author: Kvakvs (Narran @ HydraxianWaterlords EU)
+## Notes: Set up rules for cleaning trash from your bag. Press button. Boom!
+## Version: 1.0.0
+## DefaultState: enabled
+## SavedVariables: DropTrash_Rules, DropTrash_Options
+
+DropTrash.lua
+DropTrash.xml
