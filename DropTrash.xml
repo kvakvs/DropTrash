@@ -1,6 +1,13 @@
 ﻿<Ui xmlns="http://www.blizzard.com/wow/ui/">
   <Script file="DropTrash.lua"/>
 
+  <Button name="DropTrashRuleRowTemplate" virtual="true">
+    <Size>
+      <AbsDimension x="250" y="16"/>
+    </Size>
+    <NormalFont style="GameFontHighlightLeft"/>
+  </Button>
+
   <Button name="DropTrashButton" inherits="SecureActionButtonTemplate"
           parent="UIParent" toplevel="true" hidden="false" frameStrata="LOW"
           movable="true">
@@ -58,4 +65,195 @@
       </OnEvent>
     </Scripts>
   </Frame>
+
+  <!-- Main configuration frame -->
+  <Frame name="DropTrashConfigFrame" parent="UIParent" toplevel="true" hidden="true">
+    <Size>
+      <AbsDimension x="300" y="500"/>
+    </Size>
+    <Anchors>
+      <Anchor point="TOPLEFT">
+        <Offset x="312" y="-118"/>
+      </Anchor>
+    </Anchors>
+
+    <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+              edgeFile="Interface\DialogFrame\UI-DialogBox-Border"
+              tile="true">
+      <BackgroundInsets>
+        <AbsInset left="11" right="12" top="12" bottom="11"/>
+      </BackgroundInsets>
+      <TileSize>
+        <AbsValue val="32"/>
+      </TileSize>
+      <EdgeSize>
+        <AbsValue val="32"/>
+      </EdgeSize>
+    </Backdrop>
+
+    <Frames>
+      <!-- Message list frame -->
+      <ScrollFrame name="DropTrashConfigScroll" inherits="FauxScrollFrameTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT"/>
+        </Anchors>
+        <Size>
+          <AbsDimension x="300" y="176"/>
+        </Size>
+        <Scripts>
+          <OnVerticalScroll>
+            FauxScrollFrame_OnVerticalScroll(self, offset, 16, DropTrashConfigScrollbar_Update);
+          </OnVerticalScroll>
+          <OnShow>
+              DropTrashConfigScrollbar_Update()
+          </OnShow>
+        </Scripts>
+      </ScrollFrame>
+
+      <Button name="DropTrashRuleRow1" inherits="DropTrashRuleRowTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="DropTrashConfigScroll" relativePoint="TOPLEFT">
+            <Offset>
+              <AbsDimension x="16" y="-16"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>DT_ClickRulesRow(1);</OnClick>
+        </Scripts>
+      </Button>
+      <Button name="DropTrashRuleRow2" inherits="DropTrashRuleRowTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="DropTrashRuleRow1" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+        <Scripts>
+          <OnClick>DT_ClickRulesRow(2);</OnClick>
+        </Scripts>
+      </Button>
+      <Button name="DropTrashRuleRow3" inherits="DropTrashRuleRowTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="DropTrashRuleRow2" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+        <Scripts>
+          <OnClick>DT_ClickRulesRow(3);</OnClick>
+        </Scripts>
+      </Button>
+      <Button name="DropTrashRuleRow4" inherits="DropTrashRuleRowTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="DropTrashRuleRow3" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+        <Scripts>
+          <OnClick>DT_ClickRulesRow(4);</OnClick>
+        </Scripts>
+      </Button>
+      <Button name="DropTrashRuleRow5" inherits="DropTrashRuleRowTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="DropTrashRuleRow4" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+        <Scripts>
+          <OnClick>DT_ClickRulesRow(5);</OnClick>
+        </Scripts>
+      </Button>
+      <Button name="DropTrashRuleRow6" inherits="DropTrashRuleRowTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="DropTrashRuleRow5" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+        <Scripts>
+          <OnClick>DT_ClickRulesRow(6);</OnClick>
+        </Scripts>
+      </Button>
+      <Button name="DropTrashRuleRow7" inherits="DropTrashRuleRowTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="DropTrashRuleRow6" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+        <Scripts>
+          <OnClick>DT_ClickRulesRow(7);</OnClick>
+        </Scripts>
+      </Button>
+      <Button name="DropTrashRuleRow8" inherits="DropTrashRuleRowTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="DropTrashRuleRow7" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+        <Scripts>
+          <OnClick>DT_ClickRulesRow(8);</OnClick>
+        </Scripts>
+      </Button>
+      <Button name="DropTrashRuleRow9" inherits="DropTrashRuleRowTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="DropTrashRuleRow8" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+        <Scripts>
+          <OnClick>DT_ClickRulesRow(9);</OnClick>
+        </Scripts>
+      </Button>
+      <Button name="DropTrashRuleRow10" inherits="DropTrashRuleRowTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="DropTrashRuleRow9" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+        <Scripts>
+          <OnClick>DT_ClickRulesRow(10);</OnClick>
+        </Scripts>
+      </Button>
+
+      <FontString name="DropTrashRuleHelp" inherits="GameFontNormal"
+                  text="Drag items to add. Click items to remove. Items of quality blue or better are not accepted.">
+        <Anchors>
+          <Anchor point="TOP" relativeTo="DropTrashConfigScroll">
+            <Offset>
+              <AbsDimension x="0" y="-14"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </FontString>
+
+
+      <!-- Close button -->
+      <Button name="DT_CloseButton" inherits="UIPanelButtonTemplate" movable="true" text="Close">
+        <Size>
+          <AbsDimension x="80" y="23"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset x="16" y="-456"/>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>DropTrashConfig_Close();</OnClick>
+        </Scripts>
+      </Button>
+
+      <!-- Drag to add button -->
+      <Button name="DT_DragToAddButton" inherits="UIPanelButtonTemplate" movable="true" text="Drag Item to Add">
+        <Size>
+          <AbsDimension x="140" y="23"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="DT_CloseButton" relativePoint="TOPRIGHT">
+            <Offset x="8" y="0"/>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>DT_OnDropItem();</OnClick>
+          <OnMouseUp>DT_OnDropItem();</OnMouseUp>
+          <OnReceiveDrag>DT_OnDropItem();</OnReceiveDrag>
+        </Scripts>
+      </Button>
+    </Frames>
+
+    <Scripts>
+      <OnLoad>
+          self:SetMovable(true)
+          self:SetUserPlaced(true)
+          self:RegisterForDrag("LeftButton")
+          tinsert(UISpecialFrames, self:GetName());
+      </OnLoad>
+      <OnDragStart>
+          self:StartMoving()
+      </OnDragStart>
+      <OnDragStop>
+          self:StopMovingOrSizing()
+      </OnDragStop>
+    </Scripts>
+  </Frame>
+
 </Ui>
