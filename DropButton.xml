@@ -1,0 +1,54 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Script file="DropButton.lua"/>
+
+  <Button name="DropTrashButton" inherits="SecureActionButtonTemplate"
+          parent="UIParent" toplevel="true" hidden="false" frameStrata="LOW"
+          movable="true">
+    <GameTooltip name="DropTrashButtonTooltip"
+                 inherits="GameTooltipTemplate"
+                 text="Shift+Mouse Move">
+    </GameTooltip>
+
+    <Size>
+      <AbsDimension x="32" y="32"/>
+    </Size>
+    <Anchors>
+      <Anchor point="CENTER">
+        <Offset>
+          <AbsDimension x="0" y="100"/>
+        </Offset>
+      </Anchor>
+    </Anchors>
+    <Scripts>
+      <OnLoad>
+          self:EnableMouse(true);
+          self:EnableKeyboard(false);
+          self:RegisterForDrag("LeftButton");
+          self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+
+          self:SetScript("PreClick", DtMod.OnDropButtonClick);
+
+          self.title = self:CreateFontString(nil, "OVERLAY");
+          self.title:SetFont("Fonts\\ARIALN.ttf", 9)
+          self.title:SetTextColor(1, 1, 0)
+          self.title:SetAllPoints(self);
+          self.title:SetText("Drop\nTrash");
+
+          self:SetAttribute("type", "spell");
+          self:SetAttribute("unit", nil);
+          self:SetAttribute("spell", nil);
+          self:SetAttribute("item", nil);
+          self:SetAttribute("target-slot", nil);
+      </OnLoad>
+      <OnDragStart>
+          if (button == "LeftButton" and IsShiftKeyDown()) then
+            self:StartMoving();
+          end
+      </OnDragStart>
+      <OnDragStop>
+          self:StopMovingOrSizing();
+          DtMod.DropButtonMoved(self);
+      </OnDragStop>
+    </Scripts>
+  </Button>
+</Ui>

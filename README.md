@@ -1,8 +1,14 @@
-﻿Drop Trash WoW Classic Mod
-==========================
+﻿Drop Trash WoW Classic
+======================
 
-Set item level and quality to drop items (when farming low level dungeons).
-OR
-Set up list of items you want dropped.
-Press button, bags are clean.
+Trash List
+----------
 
+* Type `/trash` to see the config window.
+* Set up list of items you want deleted (drag an item and drop onto the Add button).
+
+The Button
+----------
+
+* Shift+Drag "Drop Trash" button where you want it.
+* Press the floating "Drop Trash" button. Boom! Bags are clean.

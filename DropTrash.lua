@@ -1,11 +1,20 @@
-﻿local DTOPTION_ButtonPosX = "ButtonPosX";
-local DTOPTION_ButtonPosY = "ButtonPosY";
+﻿local TOCNAME, DtMod0 = ...
+DtMod = DtMod0
 
 -- Persisted information:
 DropTrash_Rules = {}
 DropTrash_Options = {}
 
-function DropTrash_SetOption(parameter, value)
+DtMod.Rules = DropTrash_Rules
+DtMod.Options = DropTrash_Options
+
+DtMod.Const = {
+  ButtonPosX = "ButtonPosX",
+  ButtonPosY = "ButtonPosY",
+}
+local Const = DtMod.Const
+
+DtMod.SetOption = function(parameter, value)
   local realmname = GetRealmName();
   local playername = UnitName("player");
 
@@ -23,7 +32,7 @@ function DropTrash_SetOption(parameter, value)
   DropTrash_Options[realmname][playername][parameter] = value;
 end
 
-function DropTrash_GetOption(parameter, defaultValue)
+DtMod.GetOption = function(parameter, defaultValue)
   local realmname = GetRealmName();
   local playername = UnitName("player");
 
@@ -42,21 +51,14 @@ function DropTrash_GetOption(parameter, defaultValue)
   return defaultValue;
 end
 
-function DropTrash_ButtonMoved(self)
-  local x, y = self:GetLeft(), self:GetTop() - UIParent:GetHeight();
-
-  DropTrash_SetOption(DTOPTION_ButtonPosX, x);
-  DropTrash_SetOption(DTOPTION_ButtonPosY, y);
-end
-
 function DropTrash_InitializeConfigSettings()
   if not DropTrash_Options then
     DropTrash_Options = {};
   end
 
   local x, y = DropTrashButton:GetPoint();
-  DropTrash_SetOption(DTOPTION_ButtonPosX, DropTrash_GetOption(DTOPTION_ButtonPosX, x))
-  DropTrash_SetOption(DTOPTION_ButtonPosY, DropTrash_GetOption(DTOPTION_ButtonPosY, y))
+  DtMod.SetOption(Const.ButtonPosX, DtMod.GetOption(Const.ButtonPosX, x))
+  DtMod.SetOption(Const.ButtonPosY, DtMod.GetOption(Const.ButtonPosY, y))
 end
 
 function DropTrash_OnEvent(self, event, ...)
@@ -71,41 +73,7 @@ end
 function DropTrash_OnLoad()
   DropTrashEventFrame:RegisterEvent("ADDON_LOADED");
 
-  DropTrash_ButtonMoved(DropTrashButton);
-end
-
-function DT_MatchRule(itemName)
-  for _, matchString in pairs(DropTrash_Rules) do
-    -- Do not allow too short strings (4+)
-    -- string.find(itemName, matchString)
-    if string.len(matchString) > 3 and itemName == matchString then
-      return true
-    end
-   end
-   return false
-end
-
-function DropTrash_OnClick(self)
-  local count = 0
-
-  -- For all bags
-  for bagId = 0, 4 do
-    -- For all bag slots
-    for bagSlotId = 1, 36 do
-      local text = GetContainerItemLink(bagId, bagSlotId)
-      if text then
-        local itemName = GetItemInfo(text)
-        if DT_MatchRule(itemName) then
-          -- Drag item and destroy item on cursor
-          PickupContainerItem(bagId, bagSlotId)
-          DeleteCursorItem()
-          count = count + 1
-        end
-      end
-    end
-  end
-
-  print("DropTrash: Destroyed", count, "bagslots of items")
+  -- DtMod.DropButtonMoved(DropTrashButton);
 end
 
 -- this is displayed in config scroll frame
