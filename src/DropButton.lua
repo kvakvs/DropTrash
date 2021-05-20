@@ -1,7 +1,38 @@
 local TOCNAME, DtMod = ...
 local Const = DtMod.Const
 
-DtMod.DropButtonMoved = function(self)
+--function DtMod:CreateMainButton()
+--  local btn;
+--  btn = CreateFrame("Frame", "DropTrashButton", UIParent, "SecureActionButtonTemplate")
+--  btn.width = 32
+--  btn.height = 32
+--  btn:SetSize(btn.width, btn.height)
+--  btn:SetPoint("CENTER", UIParent, "TOPLEFT",
+--    DtMod.GetOption(Const.ButtonPos.X),
+--    DtMod.GetOption(Const.ButtonPos.Y))
+--  btn:SetFrameStrata("LOW")
+--  btn:SetMovable(true)
+--  --btn:EnableMouse(true)
+--  btn:RegisterForDrag("LeftButton")
+--  btn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+--  btn:EnableKeyboard(false)
+--
+--  btn:SetScript("PreClick", DtMod.OnDropButtonClick)
+--
+--  btn:title = btn:CreateFontString(nil, "OVERLAY")
+--  btn:title:SetFont("Fonts\\ARIALN.ttf", 9)
+--  btn:title:SetTextColor(1, 1, 0)
+--  btn:title:SetAllPoints(self)
+--  btn:title:SetText("Drop\nTrash")
+--
+--  btn:SetAttribute("type", "spell");
+--  btn:SetAttribute("unit", nil);
+--  btn:SetAttribute("spell", nil);
+--  btn:SetAttribute("item", nil);
+--  btn:SetAttribute("target-slot", nil);
+--end
+
+function DT_DropButtonMoved(self)
   local x, y = self:GetLeft(), self:GetTop() - UIParent:GetHeight();
 
   DtMod.SetOption(Const.ButtonPosX, x);

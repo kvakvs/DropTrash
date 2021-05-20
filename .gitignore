@@ -1,5 +1,10 @@
 ﻿/.idea
 *.bat
 
-# mod serving as inspiration
+# Addons serving as inspiration
 /Thaliz
+/Restocker
+/BlizzardInterfaceCode
+
+DropTrash.toc
+DropTrashTBC.toc

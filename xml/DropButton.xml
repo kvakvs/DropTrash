@@ -4,10 +4,10 @@
   <Button name="DropTrashButton" inherits="SecureActionButtonTemplate"
           parent="UIParent" toplevel="true" hidden="false" frameStrata="LOW"
           movable="true">
-    <GameTooltip name="DropTrashButtonTooltip"
-                 inherits="GameTooltipTemplate"
-                 text="Shift+Mouse Move">
-    </GameTooltip>
+<!--    <GameTooltip name="DropTrashButtonTooltip"-->
+<!--                 inherits="GameTooltipTemplate"-->
+<!--                 text="Shift+Mouse Move">-->
+<!--    </GameTooltip>-->
 
     <Size>
       <AbsDimension x="32" y="32"/>
@@ -47,7 +47,7 @@
       </OnDragStart>
       <OnDragStop>
           self:StopMovingOrSizing();
-          DtMod.DropButtonMoved(self);
+          DT_DropButtonMoved(self);
       </OnDragStop>
     </Scripts>
   </Button>

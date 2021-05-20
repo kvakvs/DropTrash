@@ -1,8 +1,5 @@
 ﻿rem COPY this to install.bat and edit path to your game to have a quick install option
 rem
 
-SET DST="X:\SSDGames\World of Warcraft\_classic_\Interface\AddOns"
-rd /s /q %DST%\DropTrash
-mkdir %DST%\DropTrash
-cd ..
-xcopy /e DropTrash %DST%\DropTrash
+python3 droptrash.py --version=tbc --dst="X:\SSDGames\World of Warcraft\_classic_\Interface\AddOns" install
+rem python3 droptrash.py --version=tbc --dst="X:\SSDGames\World of Warcraft\_classic_beta_\Interface\AddOns" install

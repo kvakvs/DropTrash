@@ -149,8 +149,9 @@ function DT_AddItem(text)
   local itemName, itemLink, itemRarity = GetItemInfo(text)
 
   if itemRarity >= 3 then
-    message("Items of blue quality or better cannot be added here. " ..
-      "There is no destruction confirmation, this will shred everything!")
+    message("Items of |cFF0070DDblue|r quality or |cFFA335EEbetter|r cannot be " ..
+        "added here. There is no destruction confirmation, " ..
+        "this will shred everything!")
     return
   end
 

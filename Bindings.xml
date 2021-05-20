@@ -1,0 +1,5 @@
+<Bindings>
+  <Binding name="DROPTRASH_TAKE_OUT_TRASH">
+    BUFFOMAT_ADDON.ShowWindow()
+  </Binding>
+</Bindings>

@@ -212,7 +212,7 @@
     <Layers>
       <Layer level="OVERLAY">
         <FontString inherits="DropTrashFontNormal"
-                    text="Drag items and drop onto the add button. Click items in the list to remove. Items of quality blue or better are not accepted."
+                    text="|cFF00FF00To add|r: Drag items and drop onto the Add button. |cFF00FF00To remove|r: Click items in the list. Items of quality |cFF0070DDblue|r or |cFFA335EEbetter|r are not accepted."
                     wordwrap="true"
                     justifyH="LEFT">
           <Anchors>
@@ -220,7 +220,7 @@
               <Offset x="12" y="-12"/>
             </Anchor>
           </Anchors>
-          <Size x="268" y="48"/>
+          <Size x="268" y="56"/>
         </FontString>
       </Layer>
     </Layers>
