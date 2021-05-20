@@ -20,8 +20,8 @@ UI_VERSION_CLASSIC_TBC = '20501'  # patch 2.5.1
 BOM_NAME_CLASSIC_TBC = 'DropTrashTBC'  # Directory and zip name
 BOM_TITLE_CLASSIC_TBC = "DropTrash Bag Cleaner TBC"  # Title field in TOC
 
-COPY_DIRS = ['src', 'xml']
-COPY_FILES = ['README.md']
+COPY_DIRS = ['src', 'xml', 'classes']
+COPY_FILES = ['README.md', 'Bindings.xml']
 
 
 class BuildTool:

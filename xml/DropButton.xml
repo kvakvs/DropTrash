@@ -26,8 +26,6 @@
           self:RegisterForDrag("LeftButton");
           self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 
-          self:SetScript("PreClick", DtMod.OnDropButtonClick);
-
           self.title = self:CreateFontString(nil, "OVERLAY");
           self.title:SetFont("Fonts\\ARIALN.ttf", 9)
           self.title:SetTextColor(1, 1, 0)
@@ -40,6 +38,9 @@
           self:SetAttribute("item", nil);
           self:SetAttribute("target-slot", nil);
       </OnLoad>
+      <PreClick>
+        DROPTRASH_MOD.OnDropButtonClick();
+      </PreClick>
       <OnDragStart>
           if (button == "LeftButton" and IsShiftKeyDown()) then
             self:StartMoving();

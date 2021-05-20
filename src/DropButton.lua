@@ -1,5 +1,8 @@
-local TOCNAME, DtMod = ...
-local Const = DtMod.Const
+---@type DropTrashAddon
+local _, DT = ...
+
+DT.Const = DT.Const or {}
+local Const = DT.Const
 
 --function DtMod:CreateMainButton()
 --  local btn;
@@ -35,11 +38,12 @@ local Const = DtMod.Const
 function DT_DropButtonMoved(self)
   local x, y = self:GetLeft(), self:GetTop() - UIParent:GetHeight();
 
-  DtMod.SetOption(Const.ButtonPosX, x);
-  DtMod.SetOption(Const.ButtonPosY, y);
+  DT.SetOption(Const.ButtonPosX, x);
+  DT.SetOption(Const.ButtonPosY, y);
 end
 
-function DT_MatchRule(itemName)
+---@param itemName string
+function DT.MatchItemName(itemName)
   for _, matchString in pairs(DropTrash_Rules) do
     -- Do not allow too short strings (4+)
     -- string.find(itemName, matchString)
@@ -50,7 +54,7 @@ function DT_MatchRule(itemName)
   return false
 end
 
-DtMod.OnDropButtonClick = function(self)
+function DT.OnDropButtonClick()
   local count = 0
 
   -- For all bags
@@ -60,7 +64,7 @@ DtMod.OnDropButtonClick = function(self)
       local text = GetContainerItemLink(bagId, bagSlotId)
       if text then
         local itemName = GetItemInfo(text)
-        if DT_MatchRule(itemName) then
+        if DT.MatchItemName(itemName) then
           -- Drag item and destroy item on cursor
           PickupContainerItem(bagId, bagSlotId)
           DeleteCursorItem()
@@ -70,5 +74,9 @@ DtMod.OnDropButtonClick = function(self)
     end
   end
 
-  print("DropTrash: Destroyed", count, "bagslots of items")
+  if count < 1 then
+    DT.Print("Destroyed no items")
+  else
+    DT.Print("Destroyed items and freed " .. tostring(count) .. " slots")
+  end
 end

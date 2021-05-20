@@ -1,0 +1,5 @@
+﻿rem COPY this to install.bat and edit path to your game to have a quick install option
+rem
+
+python3 droptrash.py --version=classic --dst="../_Releases/DropTrash" zip
+python3 droptrash.py --version=tbc --dst="../_Releases/DropTrash" zip

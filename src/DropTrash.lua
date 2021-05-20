@@ -1,21 +1,31 @@
-﻿local TOCNAME, DtMod0 = ...
-DtMod = DtMod0
+﻿---@type DropTrashAddon
+local _TOCNAME, DT = ...
+
+---@type DropTrashAddon
+DROPTRASH_MOD      = DT
 
 -- Persisted information:
-DropTrash_Rules = {}
-DropTrash_Options = {}
+DropTrash_Rules    = DropTrash_Rules or {}
+DropTrash_Options  = DropTrash_Options or {}
 
-DtMod.Rules = DropTrash_Rules
-DtMod.Options = DropTrash_Options
+DT.Rules           = DropTrash_Rules
+DT.Options         = DropTrash_Options
 
-DtMod.Const = {
+DT.Const           = {
   ButtonPosX = "ButtonPosX",
   ButtonPosY = "ButtonPosY",
 }
-local Const = DtMod.Const
+local Const        = DT.Const
 
-DtMod.SetOption = function(parameter, value)
-  local realmname = GetRealmName();
+---Print a text with "Buffomat: " prefix in the game chat window
+---@param t string
+function DT.Print(t)
+  local name = "DropTrash"
+  DEFAULT_CHAT_FRAME:AddMessage("|c80808080" .. name .. "|r: " .. t)
+end
+
+function DT.SetOption(parameter, value)
+  local realmname  = GetRealmName();
   local playername = UnitName("player");
 
   -- Character level config: create realm if not found in options
@@ -32,8 +42,8 @@ DtMod.SetOption = function(parameter, value)
   DropTrash_Options[realmname][playername][parameter] = value;
 end
 
-DtMod.GetOption = function(parameter, defaultValue)
-  local realmname = GetRealmName();
+function DT.GetOption(parameter, defaultValue)
+  local realmname  = GetRealmName();
   local playername = UnitName("player");
 
   -- Character level
@@ -51,14 +61,14 @@ DtMod.GetOption = function(parameter, defaultValue)
   return defaultValue;
 end
 
-function DropTrash_InitializeConfigSettings()
+local function DropTrash_InitializeConfigSettings()
   if not DropTrash_Options then
     DropTrash_Options = {};
   end
 
   local x, y = DropTrashButton:GetPoint();
-  DtMod.SetOption(Const.ButtonPosX, DtMod.GetOption(Const.ButtonPosX, x))
-  DtMod.SetOption(Const.ButtonPosY, DtMod.GetOption(Const.ButtonPosY, y))
+  DT.SetOption(Const.ButtonPosX, DT.GetOption(Const.ButtonPosX, x))
+  DT.SetOption(Const.ButtonPosY, DT.GetOption(Const.ButtonPosY, y))
 end
 
 function DropTrash_OnEvent(self, event, ...)
@@ -76,13 +86,13 @@ function DropTrash_OnLoad()
   -- DtMod.DropButtonMoved(DropTrashButton);
 end
 
--- this is displayed in config scroll frame
-function DropTrashConfig_Show()
+---This is displayed in config scroll frame
+function DT.ShowConfig()
   DropTrashConfigScrollbar_Update(DropTrashConfigScroll)
   DropTrashConfigFrame:Show()
 end
 
-function DT_CountRules()
+local function DT_CountRules()
   local n = 0
   for _, _ in pairs(DropTrash_Rules) do
     n = n + 1
@@ -99,13 +109,12 @@ function DropTrashConfigScrollbar_Update(self)
 
   FauxScrollFrame_Update(DropTrashConfigScroll, rulesCount, VISIBLE_HEIGHT, 16);
 
-  local line
   local linePlusOffset
   local rowLabel
 
   for line = 1, VISIBLE_HEIGHT do
     linePlusOffset = line + FauxScrollFrame_GetOffset(DropTrashConfigScroll);
-    rowLabel = getglobal("DropTrashRuleRow" .. line)
+    rowLabel       = getglobal("DropTrashRuleRow" .. line)
 
     if linePlusOffset <= rulesCount then
       rowLabel:SetText(DropTrash_Rules[linePlusOffset]);
@@ -124,19 +133,19 @@ function DT_ClickRulesRow(line)
   -- Shift all table contents down 1 over the deleted item
   table.remove(DropTrash_Rules, linePlusOffset)
 
-  DropTrashConfig_Show()
+  DT.ShowConfig()
 end
 
 -- CONSOLE COMMANDS
 --
-SLASH_DROPTRASH_TRASH1 = "/trash"
+SLASH_DROPTRASH_TRASH1          = "/trash"
 SlashCmdList["DROPTRASH_TRASH"] = function(msg)
   local _, _, option = string.find(msg, "(%S*)")
-  DropTrashConfig_Show()
+  DT.ShowConfig()
 end
 
-SLASH_FRAMESTK1 = "/fs"; -- new slash command for showing framestack tool
-SlashCmdList.FRAMESTK = function()
+SLASH_FRAMESTK1                 = "/fs"; -- new slash command for showing framestack tool
+SlashCmdList.FRAMESTK           = function()
   LoadAddOn("Blizzard_DebugTools");
   FrameStackTooltip_Toggle();
 end
@@ -145,7 +154,7 @@ function DropTrashConfig_Close()
   DropTrashConfigFrame:Hide()
 end
 
-function DT_AddItem(text)
+local function DT_AddItem(text)
   local itemName, itemLink, itemRarity = GetItemInfo(text)
 
   if itemRarity >= 3 then
@@ -163,7 +172,7 @@ function DT_AddItem(text)
 
   tinsert(DropTrash_Rules, itemName)
   table.sort(DropTrash_Rules)
-  DropTrashConfig_Show()
+  DT.ShowConfig()
 end
 
 function DT_OnDropItem()
@@ -172,4 +181,44 @@ function DT_OnDropItem()
     DT_AddItem(info2)
     ClearCursor()
   end
+end
+
+local function DT_Tooltip_SetItem(tooltip)
+  --local match = string.match
+  --local strsplit = strsplit
+  local itemName, link = tooltip:GetItem()
+  if not link then return; end
+  --
+  --local itemString = match(link, "item[%-?%d:]+")
+  --local itemName, _itemId = strsplit(":", itemString)
+  --
+  ----From idTip: http://www.wowinterface.com/downloads/info17033-idTip.html
+  --if itemId == "0" and TradeSkillFrame ~= nil and TradeSkillFrame:IsVisible() then
+  --  if (GetMouseFocus():GetName()) == "TradeSkillSkillIcon" then
+  --    itemId = GetTradeSkillItemLink(TradeSkillFrame.selectedSkill):match("item:(%d+):") or nil
+  --  else
+  --    for i = 1, 8 do
+  --      if (GetMouseFocus():GetName()) == "TradeSkillReagent"..i then
+  --        itemId = GetTradeSkillReagentItemLink(TradeSkillFrame.selectedSkill, i):match("item:(%d+):") or nil
+  --        break
+  --      end
+  --    end
+  --  end
+  --end
+
+  if DT.MatchItemName(itemName) then
+    --tooltip:AddLine(" ") --blank line
+    tooltip:AddLine("|c80808080DropTrash|r: This item is marked as trash")
+  end
+end
+
+function DT.Init()
+  -- Key Binding section header and key translations (see Bindings.XML)
+  BINDING_HEADER_DROPTRASH = "Drop Trash"
+  BINDING_NAME_TAKEOUTTRASH = "Take out the trash"
+  BINDING_NAME_SHOWTRASHWINDOW = "Show Config window"
+
+  GameTooltip:HookScript("OnTooltipSetItem", DT_Tooltip_SetItem)
+
+  DT.Print("Ready")
 end

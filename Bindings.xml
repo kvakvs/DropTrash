@@ -1,5 +1,8 @@
 <Bindings>
-  <Binding name="DROPTRASH_TAKE_OUT_TRASH">
-    BUFFOMAT_ADDON.ShowWindow()
+  <Binding name="TAKEOUTTRASH" header="DROPTRASH">
+    DROPTRASH_MOD.OnDropButtonClick()
+  </Binding>
+  <Binding name="SHOWTRASHWINDOW">
+    DROPTRASH_MOD.ShowConfig()
   </Binding>
 </Bindings>

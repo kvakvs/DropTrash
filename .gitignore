@@ -2,9 +2,7 @@
 *.bat
 
 # Addons serving as inspiration
-/Thaliz
-/Restocker
-/BlizzardInterfaceCode
+/_TBC_BlizzardInterfaceCode
 
 DropTrash.toc
 DropTrashTBC.toc

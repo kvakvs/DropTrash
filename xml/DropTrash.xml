@@ -28,8 +28,24 @@
     </Scripts>
   </Frame>
 
+  <Frame name="DropTrash_BackdropTemplate" virtual="true">
+    <Scripts>
+      <OnLoad inherit="prepend">
+        if BackdropTemplateMixin then
+        Mixin(self, BackdropTemplateMixin);
+        end
+      </OnLoad>
+      <OnSizeChanged inherit="prepend">
+        if self.OnBackdropSizeChanged then
+        self:OnBackdropSizeChanged();
+        end
+      </OnSizeChanged>
+    </Scripts>
+  </Frame>
+
   <!-- Main configuration frame -->
-  <Frame name="DropTrashConfigFrame" parent="UIParent" toplevel="true" hidden="true">
+  <Frame name="DropTrashConfigFrame" parent="UIParent" toplevel="true" hidden="true"
+    inherits="DropTrash_BackdropTemplate">
     <Size>
       <AbsDimension x="308" y="500"/>
     </Size>
@@ -39,23 +55,9 @@
       </Anchor>
     </Anchors>
 
-    <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
-              edgeFile="Interface\DialogFrame\UI-DialogBox-Border"
-              tile="true">
-      <BackgroundInsets>
-        <AbsInset left="11" right="12" top="12" bottom="11"/>
-      </BackgroundInsets>
-      <TileSize>
-        <AbsValue val="32"/>
-      </TileSize>
-      <EdgeSize>
-        <AbsValue val="32"/>
-      </EdgeSize>
-    </Backdrop>
-
     <Frames>
       <!-- Message list frame -->
-      <ScrollFrame name="DropTrashConfigScroll" inherits="FauxScrollFrameTemplate">
+      <ScrollFrame name="DropTrashConfigScroll" inherits="FauxScrollFrameTemplate,DropTrash_BackdropTemplate">
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
@@ -67,20 +69,6 @@
           <AbsDimension x="264" y="184"/>
         </Size>
 
-        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
-                  edgeFile="Interface\DialogFrame\UI-DialogBox-Border"
-                  tile="true">
-          <BackgroundInsets>
-            <AbsInset left="11" right="12" top="12" bottom="11"/>
-          </BackgroundInsets>
-          <TileSize>
-            <AbsValue val="32"/>
-          </TileSize>
-          <EdgeSize>
-            <AbsValue val="32"/>
-          </EdgeSize>
-        </Backdrop>
-
         <Scripts>
           <OnVerticalScroll>
             FauxScrollFrame_OnVerticalScroll(self, offset, 16, DropTrashConfigScrollbar_Update);
@@ -88,6 +76,13 @@
           <OnShow>
               DropTrashConfigScrollbar_Update()
           </OnShow>
+          <OnLoad inherit="prepend">
+            self:SetBackdrop({
+              edgeFile="Interface\\DialogFrame\\UI-DialogBox-Border",
+              tile=true,
+              insets={left=5, right=5, top=5, bottom=5}
+            });
+          </OnLoad>
         </Scripts>
       </ScrollFrame>
 
@@ -226,11 +221,21 @@
     </Layers>
 
     <Scripts>
-      <OnLoad>
-          self:SetMovable(true)
-          self:SetUserPlaced(true)
-          self:RegisterForDrag("LeftButton")
-          tinsert(UISpecialFrames, self:GetName());
+      <OnLoad inherit="prepend">
+        DROPTRASH_MOD.Init()
+
+        self:SetMovable(true)
+        self:SetUserPlaced(true)
+        self:RegisterForDrag("LeftButton")
+        tinsert(UISpecialFrames, self:GetName());
+
+        self:SetBackdrop({
+          bgFile="Interface\\DialogFrame\\UI-DialogBox-Background",
+          edgeFile="Interface\\DialogFrame\\UI-DialogBox-Border",
+          tile=true,
+          edgeSize=32, tileSize=32,
+          insets={left=5, right=5, top=5, bottom=5}
+        });
       </OnLoad>
       <OnDragStart>
           self:StartMoving()
