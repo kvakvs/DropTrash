@@ -17,7 +17,7 @@ DT.Const           = {
 }
 local Const        = DT.Const
 
----Print a text with "Buffomat: " prefix in the game chat window
+---Print a text with "DropTrash: " prefix in the game chat window
 ---@param t string
 function DT.Print(t)
   local name = "DropTrash"

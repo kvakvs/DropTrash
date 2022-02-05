@@ -1,5 +1,5 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-  <Script file="DropButton.lua"/>
+  <Script file="src/DropButton.lua"/>
 
   <Button name="DropTrashButton" inherits="SecureActionButtonTemplate"
           parent="UIParent" toplevel="true" hidden="false" frameStrata="LOW"
