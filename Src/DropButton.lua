@@ -1,5 +1,5 @@
----@type DropTrashAddon
-local _, DT = ...
+local _TOCNAME, _ADDONPRIVATE = ...
+local DT = DT_ADDON ---@type DtAddon
 
 DT.Const = DT.Const or {}
 local Const = DT.Const
@@ -54,7 +54,8 @@ function DT.MatchItemName(itemName)
   return false
 end
 
-function DT.OnDropButtonClick()
+---Run the cleanup
+function DT:OnDropButtonClick()
   local count = 0
 
   -- For all bags
@@ -75,8 +76,8 @@ function DT.OnDropButtonClick()
   end
 
   if count < 1 then
-    DT.Print("Destroyed no items")
+    DT:Print("Destroyed no items")
   else
-    DT.Print("Destroyed items and freed " .. tostring(count) .. " slots")
+    DT:Print("Destroyed items and freed " .. tostring(count) .. " slots")
   end
 end

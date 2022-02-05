@@ -9,13 +9,17 @@
 ## DefaultState: enabled
 ## SavedVariables: DropTrash_Rules, DropTrash_Options
 
-classes/DropTrashAddon.lua
+embeds.xml
+Src/Module.lua
+Src/Main.lua
 
-src/DropTrash.lua
-xml/DropTrash.xml
+Src/DropTrashAddon.lua
+Src/DropButton.lua
+Src/Const.lua
+Src/Options.lua
 
-src/DropButton.lua
-xml/DropButton.xml
+Xml/DropTrash.xml
+Xml/DropButton.xml
 
 #
 # Do not edit - this file is generated from TOC_TEMPLATE.TOC

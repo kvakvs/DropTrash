@@ -39,7 +39,7 @@
           self:SetAttribute("target-slot", nil);
       </OnLoad>
       <PreClick>
-        DROPTRASH_MOD.OnDropButtonClick();
+        DT_ADDON:OnDropButtonClick();
       </PreClick>
       <OnDragStart>
           if (button == "LeftButton" and IsShiftKeyDown()) then

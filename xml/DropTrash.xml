@@ -1,7 +1,5 @@
 ﻿<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-  <Script file="src/DropTrash.lua"/>
-
   <Font name="DropTrashFontNormal" font="Fonts\ARIALN.TTF" outline="NORMAL" virtual="true">
     <FontHeight>
       <AbsValue val="14"/>
@@ -20,10 +18,10 @@
   <Frame name="DropTrashEventFrame">
     <Scripts>
       <OnLoad>
-          if (DropTrash_OnLoad) then DropTrash_OnLoad(); end
+          if (DT_ADDON.OnLoad) then DT_ADDON:OnLoad(); end
       </OnLoad>
       <OnEvent>
-          if (DropTrash_OnEvent) then DropTrash_OnEvent(self, event, ...); end
+          if (DT_ADDON.OnEvent) then DT_ADDON:OnEvent(self, event, ...); end
       </OnEvent>
     </Scripts>
   </Frame>
@@ -74,7 +72,7 @@
             FauxScrollFrame_OnVerticalScroll(self, offset, 16, DropTrashConfigScrollbar_Update);
           </OnVerticalScroll>
           <OnShow>
-              DropTrashConfigScrollbar_Update()
+            DT_ADDON:Scrollbar_Update()
           </OnShow>
           <OnLoad inherit="prepend">
             self:SetBackdrop({
@@ -95,7 +93,7 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnClick>DT_ClickRulesRow(1);</OnClick>
+          <OnClick>DT_ADDON:ClickRulesRow(1);</OnClick>
         </Scripts>
       </Button>
       <Button name="DropTrashRuleRow2" inherits="DropTrashRuleRowTemplate">
@@ -103,7 +101,7 @@
           <Anchor point="TOPLEFT" relativeTo="DropTrashRuleRow1" relativePoint="BOTTOMLEFT"/>
         </Anchors>
         <Scripts>
-          <OnClick>DT_ClickRulesRow(2);</OnClick>
+          <OnClick>DT_ADDON:ClickRulesRow(2);</OnClick>
         </Scripts>
       </Button>
       <Button name="DropTrashRuleRow3" inherits="DropTrashRuleRowTemplate">
@@ -111,7 +109,7 @@
           <Anchor point="TOPLEFT" relativeTo="DropTrashRuleRow2" relativePoint="BOTTOMLEFT"/>
         </Anchors>
         <Scripts>
-          <OnClick>DT_ClickRulesRow(3);</OnClick>
+          <OnClick>DT_ADDON:ClickRulesRow(3);</OnClick>
         </Scripts>
       </Button>
       <Button name="DropTrashRuleRow4" inherits="DropTrashRuleRowTemplate">
@@ -119,7 +117,7 @@
           <Anchor point="TOPLEFT" relativeTo="DropTrashRuleRow3" relativePoint="BOTTOMLEFT"/>
         </Anchors>
         <Scripts>
-          <OnClick>DT_ClickRulesRow(4);</OnClick>
+          <OnClick>DT_ADDON:ClickRulesRow(4);</OnClick>
         </Scripts>
       </Button>
       <Button name="DropTrashRuleRow5" inherits="DropTrashRuleRowTemplate">
@@ -127,7 +125,7 @@
           <Anchor point="TOPLEFT" relativeTo="DropTrashRuleRow4" relativePoint="BOTTOMLEFT"/>
         </Anchors>
         <Scripts>
-          <OnClick>DT_ClickRulesRow(5);</OnClick>
+          <OnClick>DT_ADDON:ClickRulesRow(5);</OnClick>
         </Scripts>
       </Button>
       <Button name="DropTrashRuleRow6" inherits="DropTrashRuleRowTemplate">
@@ -135,7 +133,7 @@
           <Anchor point="TOPLEFT" relativeTo="DropTrashRuleRow5" relativePoint="BOTTOMLEFT"/>
         </Anchors>
         <Scripts>
-          <OnClick>DT_ClickRulesRow(6);</OnClick>
+          <OnClick>DT_ADDON:ClickRulesRow(6);</OnClick>
         </Scripts>
       </Button>
       <Button name="DropTrashRuleRow7" inherits="DropTrashRuleRowTemplate">
@@ -143,7 +141,7 @@
           <Anchor point="TOPLEFT" relativeTo="DropTrashRuleRow6" relativePoint="BOTTOMLEFT"/>
         </Anchors>
         <Scripts>
-          <OnClick>DT_ClickRulesRow(7);</OnClick>
+          <OnClick>DT_ADDON:ClickRulesRow(7);</OnClick>
         </Scripts>
       </Button>
       <Button name="DropTrashRuleRow8" inherits="DropTrashRuleRowTemplate">
@@ -151,7 +149,7 @@
           <Anchor point="TOPLEFT" relativeTo="DropTrashRuleRow7" relativePoint="BOTTOMLEFT"/>
         </Anchors>
         <Scripts>
-          <OnClick>DT_ClickRulesRow(8);</OnClick>
+          <OnClick>DT_ADDON:ClickRulesRow(8);</OnClick>
         </Scripts>
       </Button>
       <Button name="DropTrashRuleRow9" inherits="DropTrashRuleRowTemplate">
@@ -159,7 +157,7 @@
           <Anchor point="TOPLEFT" relativeTo="DropTrashRuleRow8" relativePoint="BOTTOMLEFT"/>
         </Anchors>
         <Scripts>
-          <OnClick>DT_ClickRulesRow(9);</OnClick>
+          <OnClick>DT_ADDON:ClickRulesRow(9);</OnClick>
         </Scripts>
       </Button>
       <Button name="DropTrashRuleRow10" inherits="DropTrashRuleRowTemplate">
@@ -167,7 +165,7 @@
           <Anchor point="TOPLEFT" relativeTo="DropTrashRuleRow9" relativePoint="BOTTOMLEFT"/>
         </Anchors>
         <Scripts>
-          <OnClick>DT_ClickRulesRow(10);</OnClick>
+          <OnClick>DT_ADDON:ClickRulesRow(10);</OnClick>
         </Scripts>
       </Button>
 
@@ -182,12 +180,12 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnClick>DropTrashConfig_Close();</OnClick>
+          <OnClick>DT_ADDON:Config_Close();</OnClick>
         </Scripts>
       </Button>
 
       <!-- Drag to add button -->
-      <Button name="DT_DragToAddButton" inherits="UIPanelButtonTemplate" movable="true" text="Drag Item to Add">
+      <Button name="$parent_DragToAddButton" inherits="UIPanelButtonTemplate" movable="true" text="Drag Item to Add">
         <Size>
           <AbsDimension x="140" y="29"/>
         </Size>
@@ -197,9 +195,28 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnClick>DT_OnDropItem();</OnClick>
-          <OnMouseUp>DT_OnDropItem();</OnMouseUp>
-          <OnReceiveDrag>DT_OnDropItem();</OnReceiveDrag>
+          <OnClick>DT_ADDON:OnDropItem();</OnClick>
+          <OnMouseUp>DT_ADDON:OnDropItem();</OnMouseUp>
+          <OnReceiveDrag>DT_ADDON:OnDropItem();</OnReceiveDrag>
+        </Scripts>
+      </Button>
+
+      <!--
+        Settings button, opens DT settings
+        -->
+      <Button name="$parent_SettingsButton" inherits="UIPanelButtonTemplate"
+              text="|TInterface\Buttons\UI-OptionsButton:0|t">
+        <Size>
+          <AbsDimension x="29" y="29"/>
+        </Size>
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="$parent_DragToAddButton"
+                  relativePoint="RIGHT">
+            <Offset x="8" y="0"/>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnMouseDown>DT_ADDON:OnSettings()</OnMouseDown>
         </Scripts>
       </Button>
     </Frames>
@@ -222,8 +239,6 @@
 
     <Scripts>
       <OnLoad inherit="prepend">
-        DROPTRASH_MOD.Init()
-
         self:SetMovable(true)
         self:SetUserPlaced(true)
         self:RegisterForDrag("LeftButton")

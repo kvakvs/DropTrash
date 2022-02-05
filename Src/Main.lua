@@ -1,31 +1,32 @@
-﻿---@type DropTrashAddon
-local _TOCNAME, DT = ...
+﻿local TOCNAME, _ADDONPRIVATE = ...
 
----@type DropTrashAddon
-DROPTRASH_MOD      = DT
+---@class DtMainModule
+local mainModule = DtModule.DeclareModule("Main") ---@type DtMainModule
+
+local constModule = DtModule.Import("Const") ---@type DtConstModule
+local optionsModule = DtModule.Import("Options") ---@type DtOptionsModule
+
+local DT = LibStub("AceAddon-3.0"):NewAddon(
+    TOCNAME, "AceConsole-3.0", "AceEvent-3.0") ---@type DtAddon
+
+---@type DtAddon
+DT_ADDON = DT
 
 -- Persisted information:
-DropTrash_Rules    = DropTrash_Rules or {}
-DropTrash_Options  = DropTrash_Options or {}
+DropTrash_Rules = DropTrash_Rules or {}
+DropTrash_Options = DropTrash_Options or {}
 
-DT.Rules           = DropTrash_Rules
-DT.Options         = DropTrash_Options
+DT.Rules = DropTrash_Rules
+DT.Options = DropTrash_Options
 
-DT.Const           = {
+DT.Const = {
   ButtonPosX = "ButtonPosX",
   ButtonPosY = "ButtonPosY",
 }
-local Const        = DT.Const
-
----Print a text with "DropTrash: " prefix in the game chat window
----@param t string
-function DT.Print(t)
-  local name = "DropTrash"
-  DEFAULT_CHAT_FRAME:AddMessage("|c80808080" .. name .. "|r: " .. t)
-end
+local Const = DT.Const
 
 function DT.SetOption(parameter, value)
-  local realmname  = GetRealmName();
+  local realmname = GetRealmName();
   local playername = UnitName("player");
 
   -- Character level config: create realm if not found in options
@@ -43,7 +44,7 @@ function DT.SetOption(parameter, value)
 end
 
 function DT.GetOption(parameter, defaultValue)
-  local realmname  = GetRealmName();
+  local realmname = GetRealmName();
   local playername = UnitName("player");
 
   -- Character level
@@ -71,7 +72,7 @@ local function DropTrash_InitializeConfigSettings()
   DT.SetOption(Const.ButtonPosY, DT.GetOption(Const.ButtonPosY, y))
 end
 
-function DropTrash_OnEvent(self, event, ...)
+function DT:OnEvent(evType, event, ...)
   if (event == "ADDON_LOADED") then
     local addonname = ...;
     if addonname == "DropTrash" then
@@ -80,15 +81,15 @@ function DropTrash_OnEvent(self, event, ...)
   end
 end
 
-function DropTrash_OnLoad()
+function DT:OnLoad()
   DropTrashEventFrame:RegisterEvent("ADDON_LOADED");
 
   -- DtMod.DropButtonMoved(DropTrashButton);
 end
 
 ---This is displayed in config scroll frame
-function DT.ShowConfig()
-  DropTrashConfigScrollbar_Update(DropTrashConfigScroll)
+function DT:ShowConfig()
+  self:Scrollbar_Update(DropTrashConfigScroll)
   DropTrashConfigFrame:Show()
 end
 
@@ -102,7 +103,7 @@ end
 
 VISIBLE_HEIGHT = 10 -- matches count of table row buttons in the Config Frame
 
-function DropTrashConfigScrollbar_Update(self)
+function DT:Scrollbar_Update(self)
   -- 16 is pixel height of each line
   local rulesCount
   rulesCount = DT_CountRules()
@@ -114,7 +115,7 @@ function DropTrashConfigScrollbar_Update(self)
 
   for line = 1, VISIBLE_HEIGHT do
     linePlusOffset = line + FauxScrollFrame_GetOffset(DropTrashConfigScroll);
-    rowLabel       = getglobal("DropTrashRuleRow" .. line)
+    rowLabel = getglobal("DropTrashRuleRow" .. line)
 
     if linePlusOffset <= rulesCount then
       rowLabel:SetText(DropTrash_Rules[linePlusOffset]);
@@ -126,35 +127,75 @@ function DropTrashConfigScrollbar_Update(self)
 end
 
 -- Row of config rule list is clicked - delete
-function DT_ClickRulesRow(line)
+function DT:ClickRulesRow(line)
   local linePlusOffset
   linePlusOffset = line + FauxScrollFrame_GetOffset(DropTrashConfigScroll);
 
   -- Shift all table contents down 1 over the deleted item
   table.remove(DropTrash_Rules, linePlusOffset)
 
-  DT.ShowConfig()
+  DT:ShowConfig()
 end
 
--- CONSOLE COMMANDS
---
-SLASH_DROPTRASH_TRASH1          = "/trash"
-SlashCmdList["DROPTRASH_TRASH"] = function(msg)
-  local _, _, option = string.find(msg, "(%S*)")
-  DT.ShowConfig()
+---AceAddon handler
+function DT:OnInitialize()
+  -- do init tasks here, like loading the Saved Variables,
+  -- or setting up slash commands.
 end
 
-SLASH_FRAMESTK1                 = "/fs"; -- new slash command for showing framestack tool
-SlashCmdList.FRAMESTK           = function()
-  LoadAddOn("Blizzard_DebugTools");
-  FrameStackTooltip_Toggle();
+---AceAddon handler
+function DT:OnEnable()
+  -- Do more initialization here, that really enables the use of your addon.
+  -- Register Events, Hook functions, Create Frames, Get information from
+  -- the game that wasn't available in OnInitialize
+
+  -- OPTIONS
+  LibStub("AceConfig-3.0"):RegisterOptionsTable(TOCNAME, optionsModule:CreateOptionsTable(), {})
+
+  self.optionsFrames = {
+    general = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(
+        TOCNAME, constModule.SHORT_TITLE, nil)
+  }
+
+  -- CONSOLE COMMANDS
+  --
+  SLASH_DROPTRASH_TRASH1 = "/trash"
+  SlashCmdList["DROPTRASH_TRASH"] = function(msg)
+    local _, _, option = string.find(msg, "(%S*)")
+    DT:ShowConfig()
+  end
+
+  SLASH_FRAMESTK1 = "/fs"; -- new slash command for showing framestack tool
+  SlashCmdList.FRAMESTK = function()
+    LoadAddOn("Blizzard_DebugTools");
+    FrameStackTooltip_Toggle();
+  end
+
+  -- Key Binding section header and key translations (see Bindings.XML)
+  BINDING_HEADER_DROPTRASH = "Drop Trash"
+  BINDING_NAME_TAKEOUTTRASH = "Take out the trash"
+  BINDING_NAME_SHOWTRASHWINDOW = "Show Config window"
+
+  GameTooltip:HookScript("OnTooltipSetItem", DT.Tooltip_SetItem)
+
+  if DropTrash_Options.HideFloatingButton then
+    DropTrashButton:Hide()
+  end
+
+  if not DropTrash_Options.HideGreetingMessage then
+    DT:Print("Ready")
+  end
 end
 
-function DropTrashConfig_Close()
+---AceAddon handler
+function DT:OnDisable()
+end
+
+function DT:Config_Close()
   DropTrashConfigFrame:Hide()
 end
 
-local function DT_AddItem(text)
+function DT:AddItem(text)
   local itemName, itemLink, itemRarity = GetItemInfo(text)
 
   if itemRarity >= 3 then
@@ -175,36 +216,21 @@ local function DT_AddItem(text)
   DT.ShowConfig()
 end
 
-function DT_OnDropItem()
+function DT:OnDropItem()
   local infoType, _, info2 = GetCursorInfo()
   if infoType == "item" then
-    DT_AddItem(info2)
+    self:AddItem(info2)
     ClearCursor()
   end
 end
 
-local function DT_Tooltip_SetItem(tooltip)
+function DT.Tooltip_SetItem(tooltip)
   --local match = string.match
   --local strsplit = strsplit
   local itemName, link = tooltip:GetItem()
-  if not link then return; end
-  --
-  --local itemString = match(link, "item[%-?%d:]+")
-  --local itemName, _itemId = strsplit(":", itemString)
-  --
-  ----From idTip: http://www.wowinterface.com/downloads/info17033-idTip.html
-  --if itemId == "0" and TradeSkillFrame ~= nil and TradeSkillFrame:IsVisible() then
-  --  if (GetMouseFocus():GetName()) == "TradeSkillSkillIcon" then
-  --    itemId = GetTradeSkillItemLink(TradeSkillFrame.selectedSkill):match("item:(%d+):") or nil
-  --  else
-  --    for i = 1, 8 do
-  --      if (GetMouseFocus():GetName()) == "TradeSkillReagent"..i then
-  --        itemId = GetTradeSkillReagentItemLink(TradeSkillFrame.selectedSkill, i):match("item:(%d+):") or nil
-  --        break
-  --      end
-  --    end
-  --  end
-  --end
+  if not link then
+    return ;
+  end
 
   if DT.MatchItemName(itemName) then
     --tooltip:AddLine(" ") --blank line
@@ -212,13 +238,6 @@ local function DT_Tooltip_SetItem(tooltip)
   end
 end
 
-function DT.Init()
-  -- Key Binding section header and key translations (see Bindings.XML)
-  BINDING_HEADER_DROPTRASH = "Drop Trash"
-  BINDING_NAME_TAKEOUTTRASH = "Take out the trash"
-  BINDING_NAME_SHOWTRASHWINDOW = "Show Config window"
-
-  GameTooltip:HookScript("OnTooltipSetItem", DT_Tooltip_SetItem)
-
-  DT.Print("Ready")
+function DT:OnSettings()
+  LibStub("AceConfigDialog-3.0"):Open(TOCNAME)
 end

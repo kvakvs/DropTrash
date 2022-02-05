@@ -1,8 +1,8 @@
 <Bindings>
   <Binding name="TAKEOUTTRASH" header="DROPTRASH">
-    DROPTRASH_MOD.OnDropButtonClick()
+    DT_ADDON:OnDropButtonClick()
   </Binding>
   <Binding name="SHOWTRASHWINDOW">
-    DROPTRASH_MOD.ShowConfig()
+    DT_ADDON:ShowConfig()
   </Binding>
 </Bindings>
