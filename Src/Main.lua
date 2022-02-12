@@ -213,7 +213,7 @@ function DT:AddItem(text)
 
   tinsert(DropTrash_Rules, itemName)
   table.sort(DropTrash_Rules)
-  DT.ShowConfig()
+  DT:ShowConfig()
 end
 
 function DT:OnDropItem()
