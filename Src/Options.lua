@@ -2,7 +2,7 @@ local _TOCNAME, _ADDONPRIVATE = ...
 local DT = DT_ADDON ---@type DtAddon
 
 ---@class DtOptionsModule
-local optionsModule = DtModule.DeclareModule("Options") ---@type DtOptionsModule
+local optionsModule = DtModule.New("Options") ---@type DtOptionsModule
 optionsModule.optionsOrder = 0
 
 ---@param dict table|nil
@@ -39,7 +39,7 @@ function optionsModule:CreateOptionsTable()
       showFloatingButton  = self:TemplateCheckbox(
           "Hide floating button",
           "Hide floating button. If you hide the button, the functionality is still available using keyboard shortcuts",
-          DropTrash_Options, "HideFloatingButton",
+          DropTrashOptions, "HideFloatingButton",
           function(key, value)
             if value then
               DropTrashButton:Hide()
@@ -49,7 +49,7 @@ function optionsModule:CreateOptionsTable()
           end),
       hideGreetingMessage = self:TemplateCheckbox(
           "Hide greeting message", "Hide 'DropTrash: Ready' greeting message",
-          DropTrash_Options, "HideGreetingMessage"),
+          DropTrashOptions, "HideGreetingMessage"),
     } -- end args
   } -- end
 end

@@ -7,12 +7,15 @@
 ## Notes: Drag items to the trash list. Press Drop button or key anytime. Boom!
 ## Version: ${VERSION}
 ## DefaultState: enabled
-## SavedVariables: DropTrash_Rules, DropTrash_Options
+## SavedVariables: DropTrashRules, DropTrashOptions
 
 embeds.xml
 Src/Module.lua
 Src/Main.lua
 
+Src/UI/UiHelpers.lua
+
+Src/ListMaintenance.lua
 Src/DropTrashAddon.lua
 Src/DropButton.lua
 Src/Const.lua

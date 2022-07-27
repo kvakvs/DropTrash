@@ -14,6 +14,9 @@ ij_smart_tabs = false
 ij_visual_guides = 80,100
 ij_wrap_on_typing = false
 
+[*.py]
+indent_size = 4
+
 [*.css]
 indent_size = 4
 tab_width = 4

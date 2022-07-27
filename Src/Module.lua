@@ -12,7 +12,7 @@ function DtModule:NewModule()
 end
 
 ---@param name string
-function DtModule.DeclareModule(name)
+function DtModule.New(name)
   if (not moduleIndex[name]) then
     moduleIndex[name] = DtModule:NewModule()
     return moduleIndex[name]
@@ -21,7 +21,7 @@ function DtModule.DeclareModule(name)
   return moduleIndex[name] -- found
 end
 
-DtModule.Import = DtModule.DeclareModule
+DtModule.Import = DtModule.New
 
 ---For each known module call function by fnName and optional context will be
 ---passed as 1st argument, can be ignored (defaults to nil)

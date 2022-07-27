@@ -44,7 +44,7 @@ end
 
 ---@param itemName string
 function DT.MatchItemName(itemName)
-  for _, matchString in pairs(DropTrash_Rules) do
+  for _, matchString in pairs(DropTrashRules) do
     -- Do not allow too short strings (4+)
     -- string.find(itemName, matchString)
     if string.len(matchString) > 3 and itemName == matchString then

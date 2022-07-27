@@ -1,23 +1,18 @@
 ﻿local TOCNAME, _ADDONPRIVATE = ...
 
 ---@class DtMainModule
-local mainModule = DtModule.DeclareModule("Main") ---@type DtMainModule
+local mainModule = DtModule.New("Main") ---@type DtMainModule
 
 local constModule = DtModule.Import("Const") ---@type DtConstModule
 local optionsModule = DtModule.Import("Options") ---@type DtOptionsModule
+local maintenanceModule = DtModule.Import("ListMaintenance") ---@type DtListMaintenanceModule
 
 local DT = LibStub("AceAddon-3.0"):NewAddon(
     TOCNAME, "AceConsole-3.0", "AceEvent-3.0") ---@type DtAddon
+local AceGUI = LibStub("AceGUI-3.0")
 
 ---@type DtAddon
 DT_ADDON = DT
-
--- Persisted information:
-DropTrash_Rules = DropTrash_Rules or {}
-DropTrash_Options = DropTrash_Options or {}
-
-DT.Rules = DropTrash_Rules
-DT.Options = DropTrash_Options
 
 DT.Const = {
   ButtonPosX = "ButtonPosX",
@@ -30,17 +25,17 @@ function DT.SetOption(parameter, value)
   local playername = UnitName("player");
 
   -- Character level config: create realm if not found in options
-  if not DropTrash_Options[realmname] then
-    DropTrash_Options[realmname] = {};
+  if not DropTrashOptions[realmname] then
+    DropTrashOptions[realmname] = {};
   end
 
   -- Character level config: create character section if not found in options
-  if not DropTrash_Options[realmname][playername] then
-    DropTrash_Options[realmname][playername] = {};
+  if not DropTrashOptions[realmname][playername] then
+    DropTrashOptions[realmname][playername] = {};
   end
 
   -- Set the value
-  DropTrash_Options[realmname][playername][parameter] = value;
+  DropTrashOptions[realmname][playername][parameter] = value;
 end
 
 function DT.GetOption(parameter, defaultValue)
@@ -48,10 +43,10 @@ function DT.GetOption(parameter, defaultValue)
   local playername = UnitName("player");
 
   -- Character level
-  if DropTrash_Options[realmname] then
-    if DropTrash_Options[realmname][playername] then
-      if DropTrash_Options[realmname][playername][parameter] then
-        local value = DropTrash_Options[realmname][playername][parameter];
+  if DropTrashOptions[realmname] then
+    if DropTrashOptions[realmname][playername] then
+      if DropTrashOptions[realmname][playername][parameter] then
+        local value = DropTrashOptions[realmname][playername][parameter];
         if (type(value) == "table") or not (value == "") then
           return value;
         end
@@ -63,8 +58,8 @@ function DT.GetOption(parameter, defaultValue)
 end
 
 local function DropTrash_InitializeConfigSettings()
-  if not DropTrash_Options then
-    DropTrash_Options = {};
+  if not DropTrashOptions then
+    DropTrashOptions = {};
   end
 
   local x, y = DropTrashButton:GetPoint();
@@ -90,35 +85,48 @@ end
 ---This is displayed in config scroll frame
 function DT:ShowConfig()
   self:Scrollbar_Update(DropTrashConfigScroll)
-  DropTrashConfigFrame:Show()
+  -- DropTrashConfigFrame:Show()
+
+  if DT.confFrame then
+    AceGUI:Release(DT.confFrame)
+    _G["DropTrashConfigFrame"] = nil
+    DT.confFrame = nil
+  end
+
+  DT.confFrame = maintenanceModule:CreateConfFrame()
+  _G["DropTrashConfigFrame"] = DT.confFrame
+  tinsert(UISpecialFrames, "DropTrashConfigFrame")
+
+  DT.confFrame:SetCallback("OnClose", function(widget)
+    AceGUI:Release(widget)
+    DT.confFrame = nil
+  end)
+
+  DT.confFrame:Show()
 end
 
 local function DT_CountRules()
   local n = 0
-  for _, _ in pairs(DropTrash_Rules) do
+  for _, _ in pairs(DropTrashRules) do
     n = n + 1
   end
   return n
 end
 
-VISIBLE_HEIGHT = 10 -- matches count of table row buttons in the Config Frame
+local VISIBLE_HEIGHT = 10 -- matches count of table row buttons in the Config Frame
+local ROW_HEIGHT = 16 -- units height of a table row
 
-function DT:Scrollbar_Update(self)
-  -- 16 is pixel height of each line
-  local rulesCount
-  rulesCount = DT_CountRules()
+function DT:Scrollbar_Update()
+  local rulesCount = DT_CountRules()
 
-  FauxScrollFrame_Update(DropTrashConfigScroll, rulesCount, VISIBLE_HEIGHT, 16);
-
-  local linePlusOffset
-  local rowLabel
+  FauxScrollFrame_Update(DropTrashConfigScroll, rulesCount, VISIBLE_HEIGHT, ROW_HEIGHT);
 
   for line = 1, VISIBLE_HEIGHT do
-    linePlusOffset = line + FauxScrollFrame_GetOffset(DropTrashConfigScroll);
-    rowLabel = getglobal("DropTrashRuleRow" .. line)
+    local linePlusOffset = line + FauxScrollFrame_GetOffset(DropTrashConfigScroll);
+    local rowLabel = getglobal("DropTrashRuleRow" .. line)
 
     if linePlusOffset <= rulesCount then
-      rowLabel:SetText(DropTrash_Rules[linePlusOffset]);
+      rowLabel:SetText(DropTrashRules[linePlusOffset]);
       rowLabel:Show();
     else
       rowLabel:Hide();
@@ -132,7 +140,7 @@ function DT:ClickRulesRow(line)
   linePlusOffset = line + FauxScrollFrame_GetOffset(DropTrashConfigScroll);
 
   -- Shift all table contents down 1 over the deleted item
-  table.remove(DropTrash_Rules, linePlusOffset)
+  table.remove(DropTrashRules, linePlusOffset)
 
   DT:ShowConfig()
 end
@@ -145,6 +153,18 @@ end
 
 ---AceAddon handler
 function DT:OnEnable()
+  DropTrashRules = (DropTrash_Rules or DropTrashRules) or {}
+  if DropTrash_Rules then
+    DropTrash_Rules = nil
+  end
+  DropTrashOptions = (DropTrash_Options or DropTrashOptions) or {}
+  if DropTrash_Options then
+    DropTrash_Options = nil
+  end
+
+  DT.Rules = DropTrashRules
+  DT.Options = DropTrashOptions
+
   -- Do more initialization here, that really enables the use of your addon.
   -- Register Events, Hook functions, Create Frames, Get information from
   -- the game that wasn't available in OnInitialize
@@ -178,11 +198,11 @@ function DT:OnEnable()
 
   GameTooltip:HookScript("OnTooltipSetItem", DT.Tooltip_SetItem)
 
-  if DropTrash_Options.HideFloatingButton then
+  if DropTrashOptions.HideFloatingButton then
     DropTrashButton:Hide()
   end
 
-  if not DropTrash_Options.HideGreetingMessage then
+  if not DropTrashOptions.HideGreetingMessage then
     DT:Print("Ready")
   end
 end
@@ -192,7 +212,7 @@ function DT:OnDisable()
 end
 
 function DT:Config_Close()
-  DropTrashConfigFrame:Hide()
+  --DropTrashConfigFrame:Hide()
 end
 
 function DT:AddItem(text)
@@ -205,14 +225,14 @@ function DT:AddItem(text)
     return
   end
 
-  for _, value in ipairs(DropTrash_Rules) do
+  for _, value in ipairs(DropTrashRules) do
     if value == itemName then
       return -- already exists
     end
   end
 
-  tinsert(DropTrash_Rules, itemName)
-  table.sort(DropTrash_Rules)
+  tinsert(DropTrashRules, itemName)
+  table.sort(DropTrashRules)
   DT:ShowConfig()
 end
 
