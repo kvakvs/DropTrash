@@ -21,6 +21,9 @@ Src/DropButton.lua
 Src/Const.lua
 Src/Options.lua
 
+Src/KvLib/KvEnv.lua
+Src/KvLib/KvOptions.lua
+
 Xml/DropTrash.xml
 Xml/DropButton.xml
 

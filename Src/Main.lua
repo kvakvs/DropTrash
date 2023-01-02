@@ -59,7 +59,7 @@ end
 
 local function DropTrash_InitializeConfigSettings()
   if not DropTrashOptions then
-    DropTrashOptions = {};
+    DropTrashOptions = --[[---@type DtAddonOptions]] {}
   end
 
   local x, y = DropTrashButton:GetPoint();
@@ -219,6 +219,7 @@ function DT:AddItem(text)
   local itemName, itemLink, itemRarity = GetItemInfo(text)
 
   if itemRarity >= 3 then
+    -- Popup with text and OK button
     message("Items of |cFF0070DDblue|r quality or |cFFA335EEbetter|r cannot be " ..
         "added here. There is no destruction confirmation, " ..
         "this will shred everything!")

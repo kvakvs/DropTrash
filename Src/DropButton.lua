@@ -44,6 +44,7 @@ end
 
 ---@param itemName string
 function DT.MatchItemName(itemName)
+  ---@param matchString string
   for _, matchString in pairs(DropTrashRules) do
     -- Do not allow too short strings (4+)
     -- string.find(itemName, matchString)
@@ -54,26 +55,58 @@ function DT.MatchItemName(itemName)
   return false
 end
 
+---@param eachSlotFn fun(bag: number, slot: number, itemLink: string, itemId: number): boolean
+local function forEachBagSlot(eachSlotFn)
+  for bag = 0, 4 do -- For all bags
+    for slot = 1, 36 do -- For all bag slots
+      local itemLink = GetContainerItemLink(bag, slot)
+
+      if itemLink then
+        local itemId = tonumber(--[[---@not nil]] string.match(itemLink, "item:(%d+)")) or 0
+        if not eachSlotFn(bag, slot, itemLink, itemId) then
+          return
+        end
+      end -- if slot not empty
+    end -- each slot
+  end -- each bag
+end
+
 ---Run the cleanup
 function DT:OnDropButtonClick()
   local count = 0
+  local SOUL_SHARD_ID = 6265
 
-  -- For all bags
-  for bagId = 0, 4 do
-    -- For all bag slots
-    for bagSlotId = 1, 36 do
-      local text = GetContainerItemLink(bagId, bagSlotId)
-      if text then
-        local itemName = GetItemInfo(text)
-        if DT.MatchItemName(itemName) then
-          -- Drag item and destroy item on cursor
-          PickupContainerItem(bagId, bagSlotId)
-          DeleteCursorItem()
-          count = count + 1
-        end
-      end
-    end
+  -- First: Count special items (soul shards)
+  local itemCount = --[[---@type {[number]: number}]] {}
+  forEachBagSlot(function(bag, slot, itemLink, itemId)
+    itemCount[itemId] = (itemCount[itemId] or 0) + 1
+    return true
+  end)
+
+  -- Second: Reserve special items (soul shards)
+  if itemCount[SOUL_SHARD_ID] then
+    -- Minimum to reserve: 1
+    itemCount[SOUL_SHARD_ID] = itemCount[SOUL_SHARD_ID] - (DropTrashOptions.ReserveSoulshards or 1)
   end
+
+  -- Third: Drop items, as long as the count is > 0 (this will stop when 0 is reached and allow reserving)
+  forEachBagSlot(function(bag, slot, itemLink, itemId)
+    if itemCount[itemId] <= 0 then
+      return true -- skip dropping but don't stop
+    end
+
+    local itemName = GetItemInfo(itemLink)
+
+    if DT.MatchItemName(itemName) then
+      -- Pick up item with mouse cursor, and destroy item on cursor
+      PickupContainerItem(bag, slot)
+      DeleteCursorItem()
+      count = count + 1
+      itemCount[itemId] = itemCount[itemId] - 1
+    end
+
+    return true
+  end)
 
   if count < 1 then
     DT:Print("Destroyed no items")
