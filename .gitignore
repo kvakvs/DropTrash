@@ -1,4 +1,5 @@
 ﻿/.idea
+/venv
 *.bat
 
 # Addons serving as inspiration

@@ -59,7 +59,7 @@ end
 local function forEachBagSlot(eachSlotFn)
   for bag = 0, 4 do -- For all bags
     for slot = 1, 36 do -- For all bag slots
-      local itemLink = GetContainerItemLink(bag, slot)
+      local itemLink = C_Container.GetContainerItemLink(bag, slot)
 
       if itemLink then
         local itemId = tonumber(--[[---@not nil]] string.match(itemLink, "item:(%d+)")) or 0
@@ -99,7 +99,7 @@ function DT:OnDropButtonClick()
 
     if DT.MatchItemName(itemName) then
       -- Pick up item with mouse cursor, and destroy item on cursor
-      PickupContainerItem(bag, slot)
+      C_Container.PickupContainerItem(bag, slot)
       DeleteCursorItem()
       count = count + 1
       itemCount[itemId] = itemCount[itemId] - 1

@@ -1,0 +1,32 @@
+#
+# Do not edit - this file is generated from TOC_TEMPLATE.TOC
+#
+## Interface: 30401
+## Title: DropTrash Bag Cleaner
+## Author: Kvakvs @github
+## Notes: Drag items to the trash list. Press Drop button or key anytime. Boom!
+## Version: 2023.1.1-a12a5cf1
+## DefaultState: enabled
+## SavedVariables: DropTrashRules, DropTrashOptions
+
+embeds.xml
+Src/Module.lua
+Src/Main.lua
+
+Src/UI/UiHelpers.lua
+
+Src/ListMaintenance.lua
+Src/DropTrashAddon.lua
+Src/DropButton.lua
+Src/Const.lua
+Src/Options.lua
+
+Src/KvLib/KvEnv.lua
+Src/KvLib/KvOptions.lua
+
+Xml/DropTrash.xml
+Xml/DropButton.xml
+
+#
+# Do not edit - this file is generated from TOC_TEMPLATE.TOC
+#
