@@ -3,6 +3,7 @@
 
 ---@class DtOptionsModule
 local optionsModule = DtModule.New("Options") ---@type DtOptionsModule
+local reserveExplanation = "When soulshards are marked as trash, stop deleting at N remaining in the bags. Convenience option for affliction warlocks. Minimum to reserve is 1."
 optionsModule.language = --[[---@type {[string]:string} ]] {
   ["options.category.General"] = "General",
 
@@ -13,7 +14,11 @@ optionsModule.language = --[[---@type {[string]:string} ]] {
   ["options.long.hideGreetingMessage"] = "Hide 'DropTrash: Ready' greeting message",
 
   ["options.short.reserveSoulshards"] = "Reserve soulshards",
-  ["options.long.reserveSoulshards"] = "When soulshards are marked as trash, stop deleting at N remaining in the bags. Convenience option for affliction warlocks. Minimum to reserve is 1.",
+  ["options.short.reserveSoulshardsParty"] = "Reserve soulshards (5-man party)",
+  ["options.short.reserveSoulshardsRaid"] = "Reserve soulshards (Raid)",
+  ["options.long.reserveSoulshards"] = reserveExplanation .. " Works only when not in a group.",
+  ["options.long.reserveSoulshardsParty"] = reserveExplanation .. " Works in 5-man party only.",
+  ["options.long.reserveSoulshardsRaid"] = reserveExplanation .. " Works in raid only.",
 }
 
 local kvOptionsModule = KvModuleManager.optionsModule
@@ -112,6 +117,10 @@ function optionsModule:CreateOptionsTable()
           DropTrashOptions, "HideGreetingMessage", nil),
       reserveSoulshards = self:TemplateRange("reserveSoulshards", 1, 32, 1,
           DropTrashOptions, "ReserveSoulshards", nil),
+      reserveSoulshardsParty = self:TemplateRange("reserveSoulshardsParty", 1, 32, 1,
+          DropTrashOptions, "ReserveSoulshardsParty", nil),
+      reserveSoulshardsRaid = self:TemplateRange("reserveSoulshardsRaid", 1, 32, 1,
+          DropTrashOptions, "ReserveSoulshardsRaid", nil),
     } -- end args
   } -- end
 end

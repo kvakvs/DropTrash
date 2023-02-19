@@ -57,8 +57,10 @@ end
 
 ---@param eachSlotFn fun(bag: number, slot: number, itemLink: string, itemId: number): boolean
 local function forEachBagSlot(eachSlotFn)
-  for bag = 0, 4 do -- For all bags
-    for slot = 1, 36 do -- For all bag slots
+  for bag = 0, 4 do
+    -- For all bags
+    for slot = 1, 36 do
+      -- For all bag slots
       local itemLink = C_Container.GetContainerItemLink(bag, slot)
 
       if itemLink then
@@ -86,7 +88,15 @@ function DT:OnDropButtonClick()
   -- Second: Reserve special items (soul shards)
   if itemCount[SOUL_SHARD_ID] then
     -- Minimum to reserve: 1
-    itemCount[SOUL_SHARD_ID] = itemCount[SOUL_SHARD_ID] - (DropTrashOptions.ReserveSoulshards or 1)
+    local reserve = DropTrashOptions.ReserveSoulshards or 5
+    if IsInRaid() then
+      reserve = DropTrashOptions.ReserveSoulshardsRaid or 12
+    else
+      if IsInGroup() then
+        reserve = DropTrashOptions.ReserveSoulshardsParty or 8
+      end
+    end
+    itemCount[SOUL_SHARD_ID] = itemCount[SOUL_SHARD_ID] - reserve
   end
 
   -- Third: Drop items, as long as the count is > 0 (this will stop when 0 is reached and allow reserving)

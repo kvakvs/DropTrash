@@ -1,3 +1,7 @@
+## DropTrash 2023.2.0
+
+* Separate reserve counts for soul shards in solo, party and raid.
+
 ## DropTrash 2023.1.1
 
 * [WotLK] Update to Dragonflight Lua API (Wotlk Ulduar patch changes)
