@@ -5,7 +5,7 @@
 ## Title: DropTrash Bag Cleaner
 ## Author: Kvakvs @github
 ## Notes: Drag items to the trash list. Press Drop button or key anytime. Boom!
-## Version: 2023.1.1-6ac8c038
+## Version: 2023.2.0-d189cb8b
 ## DefaultState: enabled
 ## SavedVariables: DropTrashRules, DropTrashOptions
 

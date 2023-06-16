@@ -10,7 +10,7 @@ import subprocess
 import sys
 import zipfile
 
-VERSION = '2023.2.0'  # year.month.build_num
+VERSION = '2023.6.0'  # year.month.build_num
 
 ADDON_NAME = 'DropTrash'  # Directory and zip name
 ADDON_NAME_CLASSIC = ADDON_NAME  # Directory and zip name
@@ -19,7 +19,7 @@ LEGACY_OVERRIDE_ADDON = f"{ADDON_NAME_CLASSIC}TBC"  # subdirectory with dummy ad
 
 UI_VERSION_CLASSIC = '11403'  # patch 1.14.3
 UI_VERSION_CLASSIC_TBC = '20504'  # patch 2.5.4 Phase 4 and 5 TBC
-UI_VERSION_CLASSIC_WOTLK = '30401'  # patch 3.4.1 WotLK
+UI_VERSION_CLASSIC_WOTLK = '30402'  # patch 3.4.2 WotLK (TotGC)
 
 COPY_DIRS = ['Src', 'Xml', 'Ace3']
 COPY_FILES = ['README.md', 'Bindings.xml', 'embeds.xml']
