@@ -1,3 +1,7 @@
+## DropTrash 2023.11.0
+
+- Updated the copy of KvLib for classic compatibility. Was using Windows directory Junctions before and that didn't go well.
+
 ## DropTrash 2023.2.0
 
 * Separate reserve counts for soul shards in solo, party and raid.
